@@ -10,20 +10,41 @@ public class UserDao {
     }
 
     public User get(Integer id) throws  SQLException {
-       StatementStrategy statementStrategy = new GetStatememntStategy(id);
+       StatementStrategy statementStrategy = connection -> {
+           PreparedStatement preparedStatement = connection.prepareStatement("select * from userinfo where id = ?");
+           preparedStatement.setLong(1, id);
+           return preparedStatement;
+       };
        return jdbcContext.jdbcContextForGet(statementStrategy);
     }
     public void insert(User user) throws SQLException {
-        StatementStrategy statementStrategy = new InsertStatementStarategy(user);
+        StatementStrategy statementStrategy =connection -> {
+            PreparedStatement preparedStatement = connection.prepareStatement("inset into userinfo (name, password) values (?,?)", Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setString(1, user.getName());
+            preparedStatement.setString(2, user.getPassword());
+            return preparedStatement;
+        };
         jdbcContext.jdbcContextForinsert(user, statementStrategy);
     }
     public void update(User user) throws SQLException {
-        StatementStrategy statementStrategy = new UpdateStatementStrategy(user);
+        StatementStrategy statementStrategy = connection -> {
+            PreparedStatement preparedStatement = connection.prepareStatement("Updtae userinfo set name =?,password=?,where id =? ");
+            preparedStatement.setString(1, user.getName());
+            preparedStatement.setString(2, user.getPassword());
+            preparedStatement.setInt(3, user.getId());
+            return preparedStatement;
+        };
         jdbcContext.jdbcContextForUpdate(statementStrategy);
     }
 
     public void delete(Integer id) throws SQLException {
-        StatementStrategy statementStrategy = new DeleteStatementStrategy(id);
+        StatementStrategy statementStrategy = connection -> {
+            PreparedStatement preparedStatement;
+            preparedStatement = connection.prepareStatement("delete from userinfo where id=?");
+            preparedStatement.setInt(1, id);
+            return preparedStatement;
+        };
+
         jdbcContext.jdbcContextForUpdate(statementStrategy);
     }
 
