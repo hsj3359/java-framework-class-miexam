@@ -21,18 +21,14 @@ public class DaoFactory {
     private String password;
 
     @Bean
-    public UserDao userDao() {
+    public UserDao userDao() throws ClassNotFoundException {
         return new UserDao(dataSource());
     }
     @Bean
-    public DataSource dataSource(){
+    public DataSource dataSource() throws ClassNotFoundException {
        SimpleDriverDataSource dataSource = new SimpleDriverDataSource();
-        try {
-            dataSource.setDriverClass((Class<? extends Driver>) Class.forName(className));
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        dataSource.setUrl(url);
+       dataSource.setDriverClass((Class<? extends Driver>) Class.forName(className));
+       dataSource.setUrl(url);
        dataSource.setUsername(username);
        dataSource.setPassword(password);
         return dataSource;
