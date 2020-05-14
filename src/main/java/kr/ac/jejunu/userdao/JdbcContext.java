@@ -110,25 +110,25 @@ public class JdbcContext {
         }
     }
 
-    User get(String sql, Object[] params) throws SQLException {
+
+    User get(Object[] params, String sql) throws SQLException {
         StatementStrategy statementStrategy = connection -> {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            for(int i=0; i<params.length; i++){
-                preparedStatement.setObject(i+1, params[i]);
-            }
+            for (int i = 0; i < params.length; i++) {
+                preparedStatement.setObject(i + 1, params[i]);
 
+            }
             return preparedStatement;
         };
         return jdbcContextForGet(statementStrategy);
     }
 
-    void insert(User user, Object[] params, String sql, UserDao userDao) throws SQLException {
+    void insert(User user, Object[] params, String sql) throws SQLException {
         StatementStrategy statementStrategy = connection -> {
-
-
             PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            for(int i=0; i<params.length; i++){
-                preparedStatement.setObject(i+1, params[i]);
+            for (int i = 0; i < params.length; i++) {
+                preparedStatement.setObject(i + 1, params[i]);
+
             }
             return preparedStatement;
         };
@@ -138,14 +138,14 @@ public class JdbcContext {
     void update(String sql, Object[] params) throws SQLException {
         StatementStrategy statementStrategy = connection -> {
 
-            PreparedStatement preparedStatement;
-            preparedStatement = connection.prepareStatement(sql);
-            for(int i=0; i<params.length; i++){
-                preparedStatement.setObject(i+1, params[i]);
-            }
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            for (int i = 0; i < params.length; i++) {
+                preparedStatement.setObject(i + 1, params[i]);
 
+            }
             return preparedStatement;
         };
+
         jdbcContextForUpdate(statementStrategy);
     }
 }
