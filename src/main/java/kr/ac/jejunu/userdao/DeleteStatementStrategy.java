@@ -5,10 +5,13 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class DeleteStatementStrategy implements StatementStrategy {
-    @Override
-    public PreparedStatement makeStatement(Object object, Connection connection) throws SQLException {
+    private Integer id;
+    public DeleteStatementStrategy(Integer id) {
+        this.id =id;
+    }
 
-        int id = (Integer) object;
+    @Override
+    public PreparedStatement makeStatement(Connection connection) throws SQLException {
         PreparedStatement preparedStatement;
         preparedStatement = connection.prepareStatement("delete from userinfo where id=?");
         preparedStatement.setInt(1, id);

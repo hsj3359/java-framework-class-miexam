@@ -17,22 +17,30 @@ public class DaoFactory {
     private String url;
     @Value("${db.username}")
     private String username;
-    @Value("$db.password")
+    @Value("${db.password}")
     private String password;
 
+
     @Bean
-    public UserDao userDao() throws ClassNotFoundException {
-        return new UserDao(dataSource());
+    public UserDao userDao() {
+        return new UserDao(jdbcContext());
     }
     @Bean
-    public DataSource dataSource() throws ClassNotFoundException {
-       SimpleDriverDataSource dataSource = new SimpleDriverDataSource();
-       dataSource.setDriverClass((Class<? extends Driver>) Class.forName(className));
-       dataSource.setUrl(url);
-       dataSource.setUsername(username);
-       dataSource.setPassword(password);
+    public JdbcContext jdbcContext(){
+        return new JdbcContext(dataSource());
+    }
+    @Bean
+    public DataSource dataSource(){
+        SimpleDriverDataSource dataSource = new SimpleDriverDataSource();
+        try {
+            dataSource.setDriverClass((Class<? extends Driver>) Class.forName(className));
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        dataSource.setUrl(url);
+        dataSource.setUsername(username);
+        dataSource.setPassword(password);
         return dataSource;
-
     }
 
 
